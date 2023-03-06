@@ -37,6 +37,17 @@ module "eks" {
   create_node_security_group = "true"
   create_cloudwatch_log_group = "false"
 
+  cluster_addons = {
+    coredns = {
+      preserve  = true
+      most_recent = true
+    }
+
+    vpc-cni = {
+      most_recent = true
+    }
+  }
+
   eks_managed_node_groups = {
     green-cluster-ng  = {
       disk_size = var.disk_size
@@ -105,4 +116,8 @@ resource "aws_iam_policy" "green-cluster-autoscaler" {
     ]
 }
 EOF
+}
+
+data "aws_key_pair" "ssh_key" {
+  key_name = "${var.ssh_key}"
 }
